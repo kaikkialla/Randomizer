@@ -55,7 +55,7 @@ object MainRepository {
                 dao.deleteAll()
                 dao.insert(list)
                 true
-            }.subscribeOn(Schedulers.io()).subscribe({ ignore -> }, { e -> Log.e("TEST", "", e) })
+            }
         })
     }
 }

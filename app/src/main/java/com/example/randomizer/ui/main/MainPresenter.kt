@@ -37,7 +37,6 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
                 .getList()
                 .observe(view, Observer { list ->
                     this.list = list as ArrayList<item>
-                    Log.e("fpsapfa", "${list.size}")
                 })
         }
     }
