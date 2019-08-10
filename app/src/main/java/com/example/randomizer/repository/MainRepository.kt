@@ -9,45 +9,55 @@ import androidx.room.Room
 import com.example.randomizer.Executor
 import com.example.randomizer.db.MainDao
 import com.example.randomizer.db.MainDatabase
-import com.example.randomizer.model.item
+import com.example.randomizer.model.Item
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import android.os.AsyncTask.execute
-import com.example.randomizer.ui.main.MainActivity
+
 
 
 object MainRepository {
 
-    fun getList(): LiveData<List<item>> {
+    fun getList(): LiveData<ArrayList<Item>> {
         load()
         return list
     }
 
     lateinit var dao: MainDao
-    val list: MutableLiveData<List<item>> = MutableLiveData()
-
-
+    private val list: MutableLiveData<ArrayList<Item>> = MutableLiveData()
 
 
     fun initialize(context: Context) {
-        dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao
+        dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao()
+        load()
     }
 
     private fun load() {
         Executor.EXECUTOR.execute( Runnable {
-            list.value = dao.all
+            list.value = dao.all as ArrayList<Item>
         })
-        Log.e("TAG", "load  ${list.value?.size}")
+    }
+
+    fun add(item: Item) {
+        when(list.value) {
+            null -> {
+                list.value = arrayListOf(item)
+            }
+            else -> {
+                val list = list.value
+                list?.add(item)
+                this.list.value = list
+
+            }
+        }
     }
 
 
-    fun save(item: item) {
-        Executor.EXECUTOR.execute(Runnable {
-            Single.fromCallable<Any> {
-                dao.insert(item)
-                true
-            }.subscribeOn(Schedulers.io()).subscribe({ ignore -> }, { e -> Log.e("TEST", "", e) })
-        })
+    fun save() {
+        Single.fromCallable<Any> {
+            dao.deleteAll()
+            dao.insert(list.value!!)
+            true
+        }.subscribeOn(Schedulers.io()).subscribe({ _ -> }, { e -> Log.e("gfauogpa", "", e) })
 
     }
 }

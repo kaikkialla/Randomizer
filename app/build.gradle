@@ -32,7 +32,7 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.core:core-ktx:1.0.2'
-    implementation "androidx.core:core:1.0.1"
+    implementation "androidx.core:core:1.0.2"
 
     def room_version = "2.2.0-alpha01"
     implementation "androidx.room:room-runtime:$room_version"
@@ -43,4 +43,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
 }

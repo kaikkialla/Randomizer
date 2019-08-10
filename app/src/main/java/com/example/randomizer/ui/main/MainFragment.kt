@@ -1,25 +1,28 @@
 package com.example.randomizer.ui.main
 
+
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.room.Room
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.randomizer.Executor
 import com.example.randomizer.R
-import com.example.randomizer.db.MainDao
-import com.example.randomizer.db.MainDatabase
-import com.example.randomizer.model.item
 import com.example.randomizer.repository.MainRepository
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import com.example.randomizer.ui.history.HistoryFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.main_fragment.view.*
+import kotlin.to
 
 
 const val KEY = "random_value_key"
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class MainFragment : Fragment(), MainContract.View {
 
 
     lateinit var presenter: MainContract.Presenter
@@ -27,21 +30,18 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var sp: SharedPreferences
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-
-        Executor.EXECUTOR.start()
-        MainRepository.initialize(this)
-
-
-        sp = getSharedPreferences(KEY, Context.MODE_PRIVATE)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View{
+        sp = activity!!.getSharedPreferences(KEY, Context.MODE_PRIVATE)
         presenter = MainPresenter(this)
-
         presenter.view = this
+        return LayoutInflater.from(context).inflate(R.layout.main_fragment, container, false)
+    }
 
-        generate.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.generate.setOnClickListener {
             val from = from
                 .text
                 .toString()
@@ -51,15 +51,19 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 .toString()
                 .toLong()
 
-
             presenter.onClick(from, to)
         }
+
+        button.setOnClickListener {
+            activity!!
+                .supportFragmentManager
+                .beginTransaction()
+                .addToBackStack("TAG")
+                .replace(R.id.f, HistoryFragment())
+                .commit()
+        }
+
     }
-
-
-
-
-
 
     override fun onResume() {
         super.onResume()
@@ -68,6 +72,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onPause() {
         super.onPause()
+        MainRepository.save()
         presenter.onPause()
     }
 
@@ -80,24 +85,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
 
 
-
-
-
-
     override fun setValue(value: Long) {
         number = value
         textview.text = "$value"
     }
 
     override fun saveValue(value: Long) {
-        intent.putExtra(KEY, value)
-        //sp.edit().putLong(KEY, value).apply()
+        //intent.putExtra(KEY, value)
+        sp.edit().putLong(KEY, value).apply()
 
     }
 
     override fun loadValue(): Long {
-        return intent.getLongExtra(KEY, 0)
-        //return sp.getLong(KEY, 0)
+        //return intent.getLongExtra(KEY, 0)
+        return sp.getLong(KEY, 0)
     }
 
     override fun getValue(): Long {

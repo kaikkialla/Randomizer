@@ -1,7 +1,6 @@
 package com.example.randomizer.ui.main
 
 import androidx.lifecycle.LifecycleOwner
-import com.example.randomizer.model.item
 
 interface MainContract{
     interface View : LifecycleOwner {

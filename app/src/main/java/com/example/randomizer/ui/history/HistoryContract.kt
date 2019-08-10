@@ -1,13 +1,14 @@
 package com.example.randomizer.ui.history
 
 import androidx.lifecycle.LifecycleOwner
+import com.example.randomizer.model.Item
 
 interface HistoryContract{
 
 
     interface View : LifecycleOwner {
 
-        fun setText(value: Int)
+        fun swap(list: List<Item>)
 
     }
 

@@ -1,30 +1,23 @@
 package com.example.randomizer.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Delete
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import com.example.randomizer.model.item
+import androidx.room.*
+import com.example.randomizer.model.Item
 
 
 @Dao
 interface MainDao {
 
-    @get:Query("SELECT * FROM `database`")
-    val all: List<item>
+    @get:Query("SELECT * FROM db")
+    val all: List<Item>
 
 
-    @Insert
-    fun insert(item: item)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(item: List<Item>)
 
     @Delete
-    fun delete(item: item)
+    fun delete(item: List<Item>)
 
-    @Query("DELETE FROM `database`")
+    @Query("DELETE FROM db")
     fun deleteAll()
-
-
-
-
 }
