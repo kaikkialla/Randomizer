@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.room.Room
 import com.example.randomizer.Executor
 import com.example.randomizer.R
+import com.example.randomizer.db.MainDao
 import com.example.randomizer.db.MainDatabase
 import com.example.randomizer.model.item
 import com.example.randomizer.repository.MainRepository
@@ -104,6 +105,5 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
 }
-
 
 

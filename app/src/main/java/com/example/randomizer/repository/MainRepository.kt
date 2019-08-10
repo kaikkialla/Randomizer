@@ -13,7 +13,7 @@ import com.example.randomizer.model.item
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import android.os.AsyncTask.execute
-
+import com.example.randomizer.ui.main.MainActivity
 
 
 object MainRepository {
@@ -33,36 +33,21 @@ object MainRepository {
         dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao
     }
 
-    fun update(list: ArrayList<item>) {
-        this.list.value = list
-    }
-
     private fun load() {
         Executor.EXECUTOR.execute( Runnable {
             list.value = dao.all
         })
+        Log.e("TAG", "load  ${list.value?.size}")
     }
 
 
-    fun save() {
-//        Single.fromCallable<Any> {
-//            dao.deleteAll()
-//            dao.insert(item)
-//            true
-//        }
+    fun save(item: item) {
         Executor.EXECUTOR.execute(Runnable {
             Single.fromCallable<Any> {
-                dao.deleteAll()
-                dao.insert(list.value!!)
+                dao.insert(item)
                 true
             }.subscribeOn(Schedulers.io()).subscribe({ ignore -> }, { e -> Log.e("TEST", "", e) })
         })
-
-//        Executor.EXECUTOR.execute(
-//            Runnable {
-//                dao.insert(item)
-//            }
-//        )
 
     }
 }
