@@ -4,9 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.room.Room
 import com.example.randomizer.Executor
 import com.example.randomizer.R
+import com.example.randomizer.db.MainDatabase
+import com.example.randomizer.model.item
 import com.example.randomizer.repository.MainRepository
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -98,5 +104,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
 }
+
 
 
