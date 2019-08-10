@@ -4,8 +4,8 @@ import android.os.AsyncTask.execute
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
-
-object Executor {
+enum class Executor {
+    EXECUTOR;
 
     private var mService: ScheduledExecutorService? = null
 

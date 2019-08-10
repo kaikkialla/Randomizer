@@ -7,46 +7,44 @@ import com.example.randomizer.repository.MainRepository
 
 class MainPresenter(override var view: MainContract.View? = null) : MainContract.Presenter {
 
+
     var list = arrayListOf<item>()
 
-
     override fun onClick(from: Long, to: Long) {
-        view?.setValue(generate(from, to))
-        list.add(
-        item(
-            generate(from, to)
-        ))
-        MainRepository.add(list)
+        val value = generate(from, to)
+        view?.setValue(value)
+
+        list.let {
+            list.add(item(value))
+            MainRepository.update(list)
+        }
+
     }
 
-
     override fun onPause() {
-        MainRepository.save(list)
+        MainRepository.save()
         view?.let {view ->
             view.saveValue(view.getValue())
         }
     }
 
 
-
     override fun onResume() {
         view?.let {view ->
             view.setValue(view.loadValue())
 
-            MainRepository
-                .getList()
-                .observe(view, Observer { list ->
-                    this.list = list as ArrayList<item>
-                })
+            MainRepository.getList().observe(view, Observer {
+                list = it as ArrayList<item>
+            })
         }
+
+    }
+
+    override fun generate(from: Long, to: Long): Long {
+        return (from..to).random()
     }
 
     override fun onDestroy() {
         view = null
-    }
-
-
-    override fun generate(from: Long, to: Long): Long {
-        return (from..to).random()
     }
 }

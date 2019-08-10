@@ -16,10 +16,10 @@ interface MainDao {
 
 
     @Insert
-    fun insert(list: List<item>)
+    fun insert(item: List<item>)
 
     @Delete
-    fun delete(model: item)
+    fun delete(item: ArrayList<item>)
 
     @Query("DELETE FROM `database`")
     fun deleteAll()

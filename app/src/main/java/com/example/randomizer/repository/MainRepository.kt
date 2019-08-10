@@ -18,8 +18,6 @@ import android.os.AsyncTask.execute
 
 object MainRepository {
 
-
-
     fun getList(): LiveData<List<item>> {
         load()
         return list
@@ -31,31 +29,40 @@ object MainRepository {
 
 
 
-
     fun initialize(context: Context) {
         dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao
     }
 
-    fun add(list: ArrayList<item>) {
+    fun update(list: ArrayList<item>) {
         this.list.value = list
     }
 
-
     private fun load() {
-        Executor.execute( Runnable {
+        Executor.EXECUTOR.execute( Runnable {
             list.value = dao.all
         })
     }
 
 
-
-    fun save(list: List<item>) {
-        Executor.execute(Runnable {
+    fun save() {
+//        Single.fromCallable<Any> {
+//            dao.deleteAll()
+//            dao.insert(item)
+//            true
+//        }
+        Executor.EXECUTOR.execute(Runnable {
             Single.fromCallable<Any> {
                 dao.deleteAll()
-                dao.insert(list)
+                dao.insert(list.value!!)
                 true
-            }
+            }.subscribeOn(Schedulers.io()).subscribe({ ignore -> }, { e -> Log.e("TEST", "", e) })
         })
+
+//        Executor.EXECUTOR.execute(
+//            Runnable {
+//                dao.insert(item)
+//            }
+//        )
+
     }
 }

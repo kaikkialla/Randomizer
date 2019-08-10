@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.randomizer.Executor
 import com.example.randomizer.R
-import com.example.randomizer.model.item
+import com.example.randomizer.repository.MainRepository
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 const val KEY = "random_value_key"
 
@@ -18,17 +20,19 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var sp: SharedPreferences
 
 
-    var list = arrayListOf<item>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
+        Executor.EXECUTOR.start()
+        MainRepository.initialize(this)
+
 
         sp = getSharedPreferences(KEY, Context.MODE_PRIVATE)
         presenter = MainPresenter(this)
 
+        presenter.view = this
 
         generate.setOnClickListener {
             val from = from
@@ -94,3 +98,5 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
 }
+
+
