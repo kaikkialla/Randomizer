@@ -62,7 +62,6 @@ class MainFragment : Fragment(), MainContract.View {
                 .replace(R.id.f, HistoryFragment())
                 .commit()
         }
-
     }
 
     override fun onResume() {
@@ -72,7 +71,6 @@ class MainFragment : Fragment(), MainContract.View {
 
     override fun onPause() {
         super.onPause()
-        MainRepository.save()
         presenter.onPause()
     }
 

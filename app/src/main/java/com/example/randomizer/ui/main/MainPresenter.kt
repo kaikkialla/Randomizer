@@ -23,6 +23,7 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
     }
 
     override fun onPause() {
+        Log.e("gaiupgua", "pause")
         MainRepository.save()
         view?.let {view ->
             view.saveValue(view.getValue())
@@ -31,14 +32,10 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
 
 
     override fun onResume() {
+        Log.e("gaiupgua", "resume")
         view?.let {view ->
             view.setValue(view.loadValue())
-
-            MainRepository.getList().observe(view, Observer {
-                it.forEach {
-                    Log.e("gkpss", "${it.value}    ${Date(it.timestamp)}")
-                }
-            })
+            MainRepository.getList().observe(view, Observer {})
         }
     }
 

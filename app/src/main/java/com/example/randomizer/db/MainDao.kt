@@ -1,6 +1,5 @@
 package com.example.randomizer.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.randomizer.model.Item
 

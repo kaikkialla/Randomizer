@@ -3,6 +3,7 @@ package com.example.randomizer.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.randomizer.R
+import com.example.randomizer.repository.MainRepository
 import com.example.randomizer.ui.main.MainFragment
 
 
@@ -20,6 +21,5 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
     }
+
 }
-
-
