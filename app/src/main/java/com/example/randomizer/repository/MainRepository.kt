@@ -1,9 +1,12 @@
 package com.example.randomizer.repository
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.room.Room
 import com.example.randomizer.db.MainDao
 import com.example.randomizer.db.MainDatabase
@@ -25,17 +28,17 @@ object MainRepository {
     private val list: MutableLiveData<ArrayList<Item>> = MutableLiveData()
     private val bslist: BehaviorSubject<ArrayList<Item>> = BehaviorSubject.create()
 
-
     fun initialize(context: Context) {
         dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao()
+
         bslist.observeOn(AndroidSchedulers.mainThread()).subscribe {
             list.value = it
         }
     }
 
 
+
     fun add(item: Item) {
-        Log.e("gaiupgua", "add ${item.value}")
         when(list.value) {
             null -> {
                 list.value = arrayListOf(item)
@@ -50,6 +53,7 @@ object MainRepository {
     }
 
 
+    @SuppressLint("CheckResult")
     fun load() {
         Single.fromCallable<Any> {
             bslist.onNext(dao.all as ArrayList<Item>)
@@ -57,17 +61,10 @@ object MainRepository {
             {s -> Log.e("TAG", "load   success    $s") },
             {e -> Log.e("TAG", "load   $e")}
         )
-
-//        Log.e("gaiupgua", "load")
-//        Executor.EXECUTOR.execute(
-//            Runnable {
-//                list.value = dao.all as ArrayList<Item>
-//            }
-//        )
     }
 
+    @SuppressLint("CheckResult")
     fun save() {
-        Log.e("gaiupgua", "save")
         Single.fromCallable<Any> {
             dao.deleteAll()
             dao.insert(list.value!!)

@@ -1,7 +1,10 @@
 package com.example.randomizer.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.randomizer.R
 import com.example.randomizer.repository.MainRepository
 import com.example.randomizer.ui.main.MainFragment
@@ -20,6 +23,12 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.f, MainFragment())
                 .commit()
         }
-    }
 
+//        val view = findViewById<GraphView>(R.id.graph)
+//
+//        MainRepository.getList().observe(this, Observer {
+//            Log.e("fjoasfoa", "observe")
+//            view.setlist(it)
+//        })
+    }
 }

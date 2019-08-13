@@ -9,5 +9,15 @@
     android:id="@+id/f">
 
 
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="200dp"/>-->
+
+
+<!--    <com.example.randomizer.ui.GraphView-->
+<!--        android:id="@+id/graph"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#CCC"/>-->
 
 </FrameLayout>

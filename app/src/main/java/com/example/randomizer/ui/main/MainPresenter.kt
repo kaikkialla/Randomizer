@@ -17,13 +17,14 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
         MainRepository.add(
             Item(
                 value,
-                System.currentTimeMillis()
+                System.currentTimeMillis(),
+                from,
+                to
             )
         )
     }
 
     override fun onPause() {
-        Log.e("gaiupgua", "pause")
         MainRepository.save()
         view?.let {view ->
             view.saveValue(view.getValue())
@@ -32,7 +33,6 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
 
 
     override fun onResume() {
-        Log.e("gaiupgua", "resume")
         view?.let {view ->
             view.setValue(view.loadValue())
             MainRepository.getList().observe(view, Observer {})
