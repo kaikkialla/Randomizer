@@ -42,16 +42,15 @@ class MainFragment : Fragment(), MainContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         generate.setOnClickListener {
-            val from = from
-                .text
-                .toString()
-                .toLong()
-            val to = to
-                .text
-                .toString()
-                .toLong()
 
-            presenter.onClick(from, to)
+            if(from.text.isNotEmpty() && to.text.isNotEmpty()) {
+                val from = from.text.toString().toLong()
+                val to = to.text.toString().toLong()
+
+                if(from < to) {
+                    presenter.onClick(from, to)
+                }
+            }
         }
 
         history_fragment_button.setOnClickListener {
