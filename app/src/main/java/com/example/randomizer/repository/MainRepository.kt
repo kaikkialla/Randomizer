@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.arch.core.util.Function
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.randomizer.db.MainDao
 import com.example.randomizer.db.MainDatabase
@@ -19,6 +17,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 object MainRepository {
 
+
     fun getList(): LiveData<ArrayList<Item>> {
         load()
         return list
@@ -26,7 +25,11 @@ object MainRepository {
 
     lateinit var dao: MainDao
     private val list: MutableLiveData<ArrayList<Item>> = MutableLiveData()
-    private val bslist: BehaviorSubject<ArrayList<Item>> = BehaviorSubject.create()
+    private val bslist: BehaviorSubject<ArrayList<Item>> = BehaviorSubject.create()//переделать
+
+
+
+    private var hasChanged: Boolean = false//hasChanged
 
     fun initialize(context: Context) {
         dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao()
@@ -50,25 +53,34 @@ object MainRepository {
 
             }
         }
+
+        hasChanged = true
     }
 
 
     @SuppressLint("CheckResult")
     fun load() {
+        hasChanged = false
+
         Single.fromCallable<Any> {
             bslist.onNext(dao.all as ArrayList<Item>)
         }.subscribeOn(Schedulers.io()).subscribe(
-            {s -> Log.e("TAG", "load   success    $s") },
-            {e -> Log.e("TAG", "load   $e")}
+            { s -> Log.e("db_tag", "load   success    $s") },
+            { e -> Log.e("db_tag", "load   $e")}
         )
     }
 
     @SuppressLint("CheckResult")
     fun save() {
-        Single.fromCallable<Any> {
-            dao.deleteAll()
-            dao.insert(list.value!!)
-            true
-        }.subscribeOn(Schedulers.io()).subscribe({s -> Log.e("TAG", "save   success    $s")}, {e -> Log.e("TAG", "save   $e")})
+        if(hasChanged) {
+            Single.fromCallable<Any> {
+                dao.deleteAll()
+                dao.insert(list.value!!)
+                true
+            }.subscribeOn(Schedulers.io()).subscribe(
+                { s -> Log.e("db_tag", "save   success    $s") },
+                { e -> Log.e("db_tag", "save   $e")}
+            )
+        }
     }
 }

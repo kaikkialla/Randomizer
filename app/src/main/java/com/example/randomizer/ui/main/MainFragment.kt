@@ -41,7 +41,7 @@ class MainFragment : Fragment(), MainContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.generate.setOnClickListener {
+        generate.setOnClickListener {
             val from = from
                 .text
                 .toString()
@@ -54,7 +54,7 @@ class MainFragment : Fragment(), MainContract.View {
             presenter.onClick(from, to)
         }
 
-        button.setOnClickListener {
+        history_fragment_button.setOnClickListener {
             activity!!
                 .supportFragmentManager
                 .beginTransaction()
@@ -85,7 +85,7 @@ class MainFragment : Fragment(), MainContract.View {
 
     override fun setValue(value: Long) {
         number = value
-        textview.text = "$value"
+        output.text = "$value"
     }
 
     override fun saveValue(value: Long) {

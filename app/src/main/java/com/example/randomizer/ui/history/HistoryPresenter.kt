@@ -12,6 +12,8 @@ class HistoryPresenter(
     override fun onResume() {
         view?.let {view ->
             MainRepository.getList().observe(view, Observer { list ->
+                list.sortBy { it.timestamp }
+                list.reverse()
                 view.swap(list)
             })
         }

@@ -23,12 +23,5 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.f, MainFragment())
                 .commit()
         }
-
-//        val view = findViewById<GraphView>(R.id.graph)
-//
-//        MainRepository.getList().observe(this, Observer {
-//            Log.e("fjoasfoa", "observe")
-//            view.setlist(it)
-//        })
     }
 }
