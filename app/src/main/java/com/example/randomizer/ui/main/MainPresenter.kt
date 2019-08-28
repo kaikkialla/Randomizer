@@ -26,6 +26,7 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
 
     override fun onPause() {
         MainRepository.save()
+        //MainRepository.onPause()
         view?.let {view ->
             view.saveValue(view.getValue())
         }

@@ -3,16 +3,19 @@ package com.example.randomizer.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import androidx.arch.core.util.Function
 import androidx.lifecycle.*
 import androidx.room.Room
-import com.example.randomizer.db.MainDao
-import com.example.randomizer.db.MainDatabase
+import com.example.randomizer.Utils.log
+import com.example.randomizer.db.AppDatabase
+import com.example.randomizer.db.HistoryDao
 import com.example.randomizer.model.Item
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 object MainRepository {
@@ -23,63 +26,76 @@ object MainRepository {
         return list
     }
 
-    lateinit var dao: MainDao
+    lateinit var dao: HistoryDao
+
     private val list: MutableLiveData<ArrayList<Item>> = MutableLiveData()
-    private val bslist: BehaviorSubject<ArrayList<Item>> = BehaviorSubject.create()//переделать
+    private val queue: MutableLiveData<ArrayList<Item>> = MutableLiveData()
+    private val rx_list: BehaviorSubject<ArrayList<Item>> = BehaviorSubject.create()//переделать
 
+    private var hasChanged: Boolean = false
 
+    var load_disposable: Disposable? = null
+    var save_disposable: Disposable? = null
+    var rx_list_disposable: Disposable? = null
 
-    private var hasChanged: Boolean = false//hasChanged
 
     fun initialize(context: Context) {
-        dao = Room.databaseBuilder(context.applicationContext, MainDatabase::class.java,"database").build().mainDao()
+        dao = AppDatabase.getInstance(context).historyDao()
 
-        bslist.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            list.value = it
-        }
+        rx_list_disposable = rx_list
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                list.value = it
+            }
     }
 
 
-
     fun add(item: Item) {
-        when(list.value) {
+        when(queue.value) {
             null -> {
-                list.value = arrayListOf(item)
+                queue.value = arrayListOf(item)
             }
             else -> {
-                val list = list.value!!
+                val list = queue.value!!
                 list.add(item)
-                this.list.value = list
-
+                this.queue.value = list
             }
         }
-
         hasChanged = true
     }
 
 
-    @SuppressLint("CheckResult")
-    fun load() {
-        hasChanged = false
-
-        Single.fromCallable<Any> {
-            bslist.onNext(dao.all as ArrayList<Item>)
+    private fun load() {
+        load_disposable = Single.fromCallable<Any> {
+            rx_list.onNext(dao.all as ArrayList)
         }.subscribeOn(Schedulers.io()).subscribe(
-            { s -> Log.e("db_tag", "load   success    $s") },
-            { e -> Log.e("db_tag", "load   $e")}
+            { success ->
+                load_disposable?.dispose()
+                log("load   success   $success")
+            },
+            { error ->
+                load_disposable?.dispose()
+                log("load  failed    $error")
+            }
         )
     }
+
 
     @SuppressLint("CheckResult")
     fun save() {
         if(hasChanged) {
-            Single.fromCallable<Any> {
-                dao.deleteAll()
-                dao.insert(list.value!!)
+            save_disposable = Single.fromCallable<Any> {
+                queue.value?.forEach { dao.insert(it) }
                 true
             }.subscribeOn(Schedulers.io()).subscribe(
-                { s -> Log.e("db_tag", "save   success    $s") },
-                { e -> Log.e("db_tag", "save   $e")}
+                { success ->
+                    save_disposable?.dispose()
+                    log("save   success    $success")
+                },
+                { error ->
+                    save_disposable?.dispose()
+                    log("save   $error")
+                }
             )
         }
     }
