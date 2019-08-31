@@ -16,14 +16,15 @@ import com.example.randomizer.model.Item
 import com.example.randomizer.view.viewholders.HistoryViewholder
 
 
-class HistoryAdapter: RecyclerView.Adapter<HistoryViewholder>() {
+class HistoryAdapter(val activity: FragmentActivity): RecyclerView.Adapter<HistoryViewholder>() {
 
 
     var items: List<Item> = ArrayList()
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int) = HistoryViewholder (
-        LayoutInflater.from(viewGroup.context).inflate(R.layout.history_item, viewGroup, false)
+        LayoutInflater.from(viewGroup.context).inflate(R.layout.history_item, viewGroup, false),
+        activity
     ).apply {}
 
 

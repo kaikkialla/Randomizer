@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Randomizer</string>
     <string name="generate">generate</string>
+
+
+
+    <string name="date">
+        %1$s at %2$s
+    </string>
 </resources>

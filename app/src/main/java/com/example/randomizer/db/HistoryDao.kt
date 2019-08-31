@@ -14,7 +14,10 @@ interface HistoryDao {
     fun insert(item: Item)
 
     @Delete
-    fun delete(item: List<Item>)
+    fun delete(item: Item)
+
+    @Query("DELETE FROM db WHERE id = :id")
+    fun delete(id: String)
 
     @Query("DELETE FROM db")
     fun deleteAll()

@@ -16,6 +16,7 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
 
         MainRepository.add(
             Item(
+                MainRepository.generateHash(),
                 value,
                 System.currentTimeMillis(),
                 from,

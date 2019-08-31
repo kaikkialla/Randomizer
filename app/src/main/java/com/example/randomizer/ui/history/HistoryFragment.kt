@@ -35,7 +35,7 @@ class HistoryFragment : Fragment(), HistoryContract.View {
         presenter = HistoryPresenter(this)
         presenter.view = this
 
-        adapter = HistoryAdapter()
+        adapter = HistoryAdapter(activity!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }

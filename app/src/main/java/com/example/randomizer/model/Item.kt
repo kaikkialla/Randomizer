@@ -11,7 +11,8 @@ import java.sql.Timestamp
 
 @Entity(tableName = "db")
 data class Item(
-    @PrimaryKey @NonNull val value: Long,
+    @PrimaryKey @NonNull val id: String,
+    val value: Long,
     val timestamp: Long,
     val range_start: Long,
     val range_end: Long
