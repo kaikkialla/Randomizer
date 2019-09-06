@@ -1,10 +1,14 @@
 package com.example.randomizer.repository
 
 import android.content.Context
+import android.telecom.Call
+import android.util.Log
 import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.example.randomizer.CallbackClass
+import com.example.randomizer.Executor
 import com.example.randomizer.Utils.log
 import com.example.randomizer.db.AppDatabase
 import com.example.randomizer.db.HistoryDao
@@ -19,7 +23,6 @@ import java.util.stream.Collectors
 
 
 object MainRepository {
-
 
     fun getList(): LiveData<ArrayList<Item>> {
         load()
@@ -42,7 +45,6 @@ object MainRepository {
 
     fun initialize(context: Context) {
         dao = AppDatabase.getInstance(context).historyDao()
-
         rx_list_disposable = rx_list
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -81,17 +83,14 @@ object MainRepository {
         )
     }
 
-
     fun save() {
         if(hasChanged) {
-            log("queue size: ${queue?.value?.size}")
             save_disposable = Single.fromCallable<Any> {
                 queue?.value?.forEach { dao.insert(it) }
                 true
             }.subscribeOn(Schedulers.io()).subscribe(
                 { success ->
-                    queue = null
-                    queue = MutableLiveData()
+                    queue?.value?.clear()
                     save_disposable?.dispose()
                     hasChanged = false
                     log("save   success    $success")
@@ -103,6 +102,15 @@ object MainRepository {
             )
         }
     }
+
+
+
+
+
+
+
+
+
 
 
     fun generateHash(): String {
