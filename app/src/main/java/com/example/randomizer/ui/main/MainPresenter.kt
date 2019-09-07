@@ -5,6 +5,9 @@ import androidx.lifecycle.Observer
 import com.example.randomizer.model.Item
 import com.example.randomizer.repository.MainRepository
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.FutureTask
 
 class MainPresenter(override var view: MainContract.View? = null) : MainContract.Presenter {
 
@@ -42,7 +45,13 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
     }
 
     override fun generate(from: Long, to: Long): Long {
-        return (from..to).random()
+        val callable = Callable {
+            (from..to).random()
+        }
+
+        val future = FutureTask<Long>(callable)
+        Thread(future).start()
+        return future.get()
     }
 
     override fun onDestroy() {

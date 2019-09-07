@@ -1,14 +1,15 @@
 package com.example.randomizer.repository
 
 import android.content.Context
+import android.os.AsyncTask
 import android.telecom.Call
 import android.util.Log
 import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.example.randomizer.CallbackClass
 import com.example.randomizer.Executor
+import com.example.randomizer.Utils
 import com.example.randomizer.Utils.log
 import com.example.randomizer.db.AppDatabase
 import com.example.randomizer.db.HistoryDao

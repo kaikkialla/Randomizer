@@ -55,6 +55,7 @@ class MainFragment : Fragment(), MainContract.View {
             }
         }
 
+
         history_fragment_button.setOnClickListener {
             activity!!
                 .supportFragmentManager
