@@ -1,12 +1,9 @@
 package com.example.randomizer.ui.main
 
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.example.randomizer.model.Item
 import com.example.randomizer.repository.MainRepository
-import java.util.*
 import java.util.concurrent.Callable
-import java.util.concurrent.Executor
 import java.util.concurrent.FutureTask
 
 class MainPresenter(override var view: MainContract.View? = null) : MainContract.Presenter {

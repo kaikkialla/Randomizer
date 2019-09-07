@@ -1,15 +1,8 @@
 package com.example.randomizer.repository
 
 import android.content.Context
-import android.os.AsyncTask
-import android.telecom.Call
-import android.util.Log
-import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import com.example.randomizer.Executor
-import com.example.randomizer.Utils
 import com.example.randomizer.Utils.log
 import com.example.randomizer.db.AppDatabase
 import com.example.randomizer.db.HistoryDao
@@ -19,8 +12,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import java.util.stream.Collector
-import java.util.stream.Collectors
 
 
 object MainRepository {
@@ -43,6 +34,7 @@ object MainRepository {
     var rx_list_disposable: Disposable? = null
     var delete_disposable: Disposable? = null
     var delete_by_id_disposable: Disposable? = null
+
 
     fun initialize(context: Context) {
         dao = AppDatabase.getInstance(context).historyDao()
@@ -70,37 +62,34 @@ object MainRepository {
 
 
     private fun load() {
-        load_disposable = Single.fromCallable<Any> {
-            rx_list.onNext(dao.all as ArrayList)
-        }.subscribeOn(Schedulers.io()).subscribe(
-            { success ->
-                load_disposable?.dispose()
-                log("load   success   $success")
-            },
-            { error ->
-                load_disposable?.dispose()
-                log("load  failed    $error")
+        load_disposable = Single
+            .fromCallable<Any> {
+                rx_list.onNext(dao.all as ArrayList)
             }
-        )
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { load_disposable?.dispose() },
+                { load_disposable?.dispose() }
+            )
     }
 
     fun save() {
         if(hasChanged) {
-            save_disposable = Single.fromCallable<Any> {
-                queue?.value?.forEach { dao.insert(it) }
-                true
-            }.subscribeOn(Schedulers.io()).subscribe(
-                { success ->
-                    queue?.value?.clear()
-                    save_disposable?.dispose()
-                    hasChanged = false
-                    log("save   success    $success")
-                },
-                { error ->
-                    save_disposable?.dispose()
-                    log("save   $error")
+            save_disposable = Single
+                .fromCallable<Any> {
+                    queue?.value?.forEach {
+                        dao.insert(it)
+                    }
                 }
-            )
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        queue?.value?.clear()
+                        save_disposable?.dispose()
+                        hasChanged = false
+                    },
+                    { save_disposable?.dispose() }
+                )
         }
     }
 

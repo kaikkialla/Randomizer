@@ -1,6 +1,5 @@
 package com.example.randomizer.ui.history
 
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.example.randomizer.repository.MainRepository
 

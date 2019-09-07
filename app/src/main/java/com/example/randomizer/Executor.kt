@@ -1,6 +1,5 @@
 package com.example.randomizer
 
-import android.os.AsyncTask.execute
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -16,6 +15,7 @@ enum class Executor {
         val poolSize = Runtime.getRuntime().availableProcessors() / 2 + 2 // число потоков
         mService = Executors.newScheduledThreadPool(poolSize)
     }
+
 
     fun execute(runnable: () -> Unit) {
         mService!!.execute(runnable)

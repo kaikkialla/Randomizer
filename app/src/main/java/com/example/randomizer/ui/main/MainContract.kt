@@ -18,9 +18,7 @@ interface MainContract{
 
         var view: View?
 
-
         fun onDestroy()
-
 
         fun onResume()
 
@@ -29,6 +27,5 @@ interface MainContract{
         fun onPause()
 
         fun onClick(from: Long, to: Long)
-
     }
 }

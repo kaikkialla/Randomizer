@@ -2,24 +2,15 @@ package com.example.randomizer.ui.main
 
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.randomizer.Executor
 import com.example.randomizer.R
-import com.example.randomizer.Utils
-import com.example.randomizer.repository.MainRepository
 import com.example.randomizer.ui.history.HistoryFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.main_fragment.view.*
-import kotlin.math.log
-import kotlin.to
 
 
 const val KEY = "random_value_key"
