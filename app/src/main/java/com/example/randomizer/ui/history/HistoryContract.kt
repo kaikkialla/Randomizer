@@ -7,9 +7,9 @@ interface HistoryContract{
 
 
     interface View : LifecycleOwner {
+        var presenter: Presenter?
 
         fun swap(list: List<Item>)
-
     }
 
     interface Presenter {

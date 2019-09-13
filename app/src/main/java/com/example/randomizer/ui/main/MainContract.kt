@@ -15,7 +15,6 @@ interface MainContract{
     }
 
     interface Presenter{
-
         var view: View?
 
         fun onDestroy()

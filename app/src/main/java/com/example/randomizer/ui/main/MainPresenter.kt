@@ -2,21 +2,22 @@ package com.example.randomizer.ui.main
 
 import androidx.lifecycle.Observer
 import com.example.randomizer.model.Item
-import com.example.randomizer.repository.MainRepository
+import com.example.randomizer.repository.Repository
 import java.util.concurrent.Callable
 import java.util.concurrent.FutureTask
 
-class MainPresenter(override var view: MainContract.View? = null) : MainContract.Presenter {
-
+class MainPresenter(
+    override var view: MainContract.View? = null
+    ) : MainContract.Presenter {
 
 
     override fun onClick(from: Long, to: Long) {
         val value = generate(from, to)
         view?.setValue(value)
 
-        MainRepository.add(
+        Repository.add(
             Item(
-                MainRepository.generateHash(),
+                Repository.generateHash(),
                 value,
                 System.currentTimeMillis(),
                 from,
@@ -26,8 +27,7 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
     }
 
     override fun onPause() {
-        MainRepository.save()
-        //MainRepository.onPause()
+        Repository.save()
         view?.let {view ->
             view.saveValue(view.getValue())
         }
@@ -37,7 +37,7 @@ class MainPresenter(override var view: MainContract.View? = null) : MainContract
     override fun onResume() {
         view?.let {view ->
             view.setValue(view.loadValue())
-            MainRepository.getList().observe(view, Observer {})
+            Repository.getlist().observe(view, Observer {})
         }
     }
 

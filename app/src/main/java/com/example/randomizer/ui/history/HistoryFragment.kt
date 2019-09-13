@@ -15,17 +15,24 @@ class HistoryFragment : Fragment(), HistoryContract.View {
 
 
 
-    lateinit var presenter: HistoryContract.Presenter
-    lateinit var adapter: HistoryAdapter
+    override var presenter: HistoryContract.Presenter? = null
+    private var adapter: HistoryAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return LayoutInflater.from(context).inflate(R.layout.history_fragment, container, false)
+        return LayoutInflater
+            .from(context)
+            .inflate(
+                R.layout.history_fragment,
+                container,
+                false
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         presenter = HistoryPresenter(this)
-        presenter.view = this
+        presenter?.view = this
 
         adapter = HistoryAdapter(activity!!)
         recyclerView.adapter = adapter
@@ -34,15 +41,15 @@ class HistoryFragment : Fragment(), HistoryContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.onResume()
+        presenter?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.onPause()
+        presenter?.onPause()
     }
 
     override fun swap(list: List<Item>) {
-        adapter.swap(list)
+        adapter?.swap(list)
     }
 }

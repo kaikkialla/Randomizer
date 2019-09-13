@@ -1,8 +1,12 @@
 package com.example.randomizer
 
 import android.content.Context
+import android.os.AsyncTask
 import android.util.DisplayMetrics
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import com.example.randomizer.db.HistoryDao
+import com.example.randomizer.model.Item
 import kotlin.math.roundToInt
 
 object Utils{
