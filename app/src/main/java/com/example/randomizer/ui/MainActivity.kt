@@ -19,5 +19,6 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.f, MainFragment())
                 .commit()
         }
+
     }
 }
