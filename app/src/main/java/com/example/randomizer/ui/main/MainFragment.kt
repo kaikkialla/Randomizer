@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.randomizer.R
+import com.example.randomizer.getRepository
 import com.example.randomizer.ui.history.HistoryFragment
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -26,7 +27,7 @@ class MainFragment : Fragment(), MainContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View{
         sp = activity!!.getSharedPreferences(KEY, Context.MODE_PRIVATE)
-        presenter = MainPresenter(this)
+        presenter = MainPresenter(this, getRepository(context!!))
         presenter.view = this
         return LayoutInflater.from(context).inflate(R.layout.main_fragment, container, false)
     }

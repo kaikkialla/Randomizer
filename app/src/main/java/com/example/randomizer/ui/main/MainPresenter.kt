@@ -3,11 +3,13 @@ package com.example.randomizer.ui.main
 import androidx.lifecycle.Observer
 import com.example.randomizer.model.Item
 import com.example.randomizer.repository.Repository
+import com.example.randomizer.repository.RepositoryImpl
 import java.util.concurrent.Callable
 import java.util.concurrent.FutureTask
 
 class MainPresenter(
-    override var view: MainContract.View? = null
+    override var view: MainContract.View? = null,
+    private val repository: Repository
     ) : MainContract.Presenter {
 
 
@@ -15,9 +17,9 @@ class MainPresenter(
         val value = generate(from, to)
         view?.setValue(value)
 
-        Repository.add(
+        repository.add(
             Item(
-                Repository.generateHash(),
+                repository.generateHash(),
                 value,
                 System.currentTimeMillis(),
                 from,
@@ -27,7 +29,7 @@ class MainPresenter(
     }
 
     override fun onPause() {
-        Repository.save()
+        repository.save()
         view?.let {view ->
             view.saveValue(view.getValue())
         }
@@ -37,7 +39,7 @@ class MainPresenter(
     override fun onResume() {
         view?.let {view ->
             view.setValue(view.loadValue())
-            Repository.getlist().observe(view, Observer {})
+            repository.getlist().observe(view, Observer {})
         }
     }
 
