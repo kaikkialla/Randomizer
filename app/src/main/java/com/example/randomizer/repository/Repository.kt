@@ -19,10 +19,8 @@ object Repository {
     }
 
     lateinit var dao: HistoryDao
-
     private val list: MutableLiveData<ArrayList<Item>> = MutableLiveData()
     private var queue: MutableLiveData<ArrayList<Item>>? = MutableLiveData()
-
     private var hasChanged: Boolean = false
 
 
@@ -69,8 +67,8 @@ object Repository {
 
 
     class Load(
-        val dao: HistoryDao,
-        val list: MutableLiveData<ArrayList<Item>>
+        private val dao: HistoryDao,
+        private val list: MutableLiveData<ArrayList<Item>>
     ) : AsyncTask<Void, Void, ArrayList<Item>>() {
         override fun doInBackground(vararg params: Void): ArrayList<Item> {
             return dao.all as ArrayList<Item>
@@ -83,8 +81,8 @@ object Repository {
 
 
     class Save(
-        val dao: HistoryDao,
-        val queue: MutableLiveData<ArrayList<Item>>?,
+        private val dao: HistoryDao,
+        private val queue: MutableLiveData<ArrayList<Item>>?,
         var hasChanged: Boolean
     ) : AsyncTask<Void, Void, Void?>() {
         override fun doInBackground(vararg params: Void): Void? {
